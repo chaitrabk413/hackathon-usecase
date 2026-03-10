@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-probe
+  namespace: {{ .Values.namespace }}
+data:
+  livenessPath: {{ .Values.probes.liveness.path | quote }}
+  readinessPath: {{ .Values.probes.readiness.path | quote }}
+  livenessInitialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds | quote }}
+  readinessInitialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds | quote }}

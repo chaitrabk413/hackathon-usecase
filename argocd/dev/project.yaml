@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: hackathon-dev
+  namespace: argocd
+spec:
+  description: Hackathon dev project
+  sourceRepos:
+    - https://github.com/chaitrabk413/hackathon-usecase.git
+  destinations:
+    - namespace: application-dev
+      server: https://kubernetes.default.svc
+    - namespace: order-dev
+      server: https://kubernetes.default.svc
+    - namespace: patient-dev
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

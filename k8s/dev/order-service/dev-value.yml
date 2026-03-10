@@ -1,0 +1,34 @@
+name: order-service
+namespace: order-dev
+replicaCount: 2
+
+image:
+  repository: 288548446501.dkr.ecr.us-east-1.amazonaws.com/hackathon-order-service
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+containerPort: 8080
+
+config:
+  enabled: true
+  data:
+    SPRING_PROFILES_ACTIVE: dev
+
+secret:
+  enabled: false
+  data: {}
+
+probes:
+  liveness:
+    path: /actuator/health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readiness:
+    path: /actuator/health
+    initialDelaySeconds: 20
+    periodSeconds: 10
