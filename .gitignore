@@ -16,3 +16,4 @@ ngrok_recovery_codes.txt
 *.tfstate.*
 *.tfplan
 tfplan
+tfplan*
