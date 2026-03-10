@@ -8,6 +8,7 @@ pipeline {
     AWS_REGION = "us-east-1"
     AWS_ACCOUNT_ID = "288548446501"
     ECR_REPO_URL = "288548446501.dkr.ecr.us-east-1.amazonaws.com/hackathon-patient-service"
+    AWS_CREDENTIALS_ID = "aws-ecr-jenkins"
   }
 
   options {
@@ -36,11 +37,16 @@ pipeline {
 
     stage('Login To ECR') {
       steps {
-        script {
-          if (isUnix()) {
-            sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-          } else {
-            bat 'for /f "delims=" %%i in (\'aws ecr get-login-password --region %AWS_REGION%\') do docker login --username AWS --password %%i %AWS_ACCOUNT_ID%.dkr.ecr.%AWS_REGION%.amazonaws.com'
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: "${AWS_CREDENTIALS_ID}"
+        ]]) {
+          script {
+            if (isUnix()) {
+              sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+            } else {
+              bat 'for /f "delims=" %%i in (\'aws ecr get-login-password --region %AWS_REGION%\') do docker login --username AWS --password %%i %AWS_ACCOUNT_ID%.dkr.ecr.%AWS_REGION%.amazonaws.com'
+            }
           }
         }
       }
