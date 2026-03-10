@@ -14,6 +14,9 @@ service:
 
 containerPort: 3001
 
+imagePullSecrets:
+  - ecr-pull-secret
+
 config:
   enabled: true
   data:

@@ -14,6 +14,8 @@ service:
 
 containerPort: 80
 
+imagePullSecrets: []
+
 config:
   enabled: false
   data: {}

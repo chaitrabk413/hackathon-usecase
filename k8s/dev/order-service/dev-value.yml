@@ -14,6 +14,9 @@ service:
 
 containerPort: 8080
 
+imagePullSecrets:
+  - ecr-pull-secret
+
 config:
   enabled: true
   data:
