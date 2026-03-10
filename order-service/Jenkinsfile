@@ -1,0 +1,80 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_NAME = "hackathon-order-service"
+    DOCKERFILE_PATH = "order-service/dockerfile"
+    BUILD_CONTEXT = "order-service"
+    AWS_REGION = "us-east-1"
+    AWS_ACCOUNT_ID = "288548446501"
+    ECR_REPO_URL = "288548446501.dkr.ecr.us-east-1.amazonaws.com/hackathon-order-service"
+  }
+
+  options {
+    timestamps()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        script {
+          def cmd = "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} -t ${IMAGE_NAME}:latest -f ${DOCKERFILE_PATH} ${BUILD_CONTEXT}"
+          if (isUnix()) {
+            sh cmd
+          } else {
+            bat cmd
+          }
+        }
+      }
+    }
+
+    stage('Login To ECR') {
+      steps {
+        script {
+          if (isUnix()) {
+            sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+          } else {
+            bat 'for /f "delims=" %%i in (\'aws ecr get-login-password --region %AWS_REGION%\') do docker login --username AWS --password %%i %AWS_ACCOUNT_ID%.dkr.ecr.%AWS_REGION%.amazonaws.com'
+          }
+        }
+      }
+    }
+
+    stage('Push Image To ECR') {
+      steps {
+        script {
+          if (isUnix()) {
+            sh """
+              docker tag ${IMAGE_NAME}:${env.BUILD_NUMBER} ${ECR_REPO_URL}:${env.BUILD_NUMBER}
+              docker tag ${IMAGE_NAME}:latest ${ECR_REPO_URL}:latest
+              docker push ${ECR_REPO_URL}:${env.BUILD_NUMBER}
+              docker push ${ECR_REPO_URL}:latest
+            """
+          } else {
+            bat """
+              docker tag ${IMAGE_NAME}:${env.BUILD_NUMBER} ${ECR_REPO_URL}:${env.BUILD_NUMBER}
+              docker tag ${IMAGE_NAME}:latest ${ECR_REPO_URL}:latest
+              docker push ${ECR_REPO_URL}:${env.BUILD_NUMBER}
+              docker push ${ECR_REPO_URL}:latest
+            """
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "Built and pushed ${ECR_REPO_URL}:${env.BUILD_NUMBER} and ${ECR_REPO_URL}:latest"
+    }
+    failure {
+      echo "Docker build or ECR push failed for ${IMAGE_NAME}"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.DS*
+.class*
+.jar
+.ear
+
+# Secrets
+access_key
+
+# Terraform local artifacts
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
