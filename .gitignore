@@ -5,6 +5,10 @@
 
 # Secrets
 access_key
+ngrok_recovery_codes.txt
+
+# Local tools
+.tools/
 
 # Terraform local artifacts
 **/.terraform/*

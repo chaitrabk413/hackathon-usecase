@@ -13,38 +13,39 @@ Order-service Java microservice.
 ## What we are looking for
 ### CI Pipeline
 1. Build microservices on local
-2. Docker build microservice
-3. Create Kubernetes YAML files. (Internal - helm charts)
-3. Push to GCR / ACR / ECR
+2. Build Docker images for each microservice
+3. Create Kubernetes manifests using internal Helm templates
+4. Push container images to GCR / ACR / ECR
+
 ### CD Deployment
 1. Pull from GCR / ACR / ECR
 2. Deploy on GKE / AKS / EKS
 
 ### Secrets
-1. Azure KeyVault / AWS Secret Manager
+1. Integrate with Azure Key Vault / AWS Secrets Manager
 
-For Containternization use Docker, Terraform for IaC, Github Action / Azure DevOps for CI/CD pipelines.
+For containerization use Docker, Terraform for IaC, and GitHub Actions / Azure DevOps / Jenkins for CI/CD pipelines.
 
 ### Monitoring and Logging: 
-Set up basic monitoring and logging using Azure Monitor and other services / GCP / AWS Services.
+Set up basic monitoring and logging using cloud-native services (Azure Monitor / GCP / AWS) or equivalent open-source tooling.
 
 ### Containerization: 
-You need to containerize these microservices using Docker.
+Containerize all microservices using Docker.
 
 ### Infrastructure as Code (Terraform):
 
 Set up a Terraform project structure supporting multiple environments (dev, staging, prod).
-Provision the following in Azure / GCP / AWS resources:
-VPC with public and private subnets across two availability zones
-IAM roles and security groups
-Storage for Terraform state storage
-State locking
-(Other resources specific to your chosen track)
-Terraform State Management:
+Provision the following Azure / GCP / AWS resources:
+1. VPC/VNet with public and private subnets across two availability zones
+2. IAM roles and security groups
+3. Storage for Terraform state
+4. State locking
+5. Other resources specific to your selected cloud track
 
-Implement remote state storage using Blob Storage / GCP Files / AWS S3
-Set up state locking
-Configure workspace separation for different environments
+Terraform state management:
+1. Implement remote state storage (Blob Storage / GCS / AWS S3)
+2. Configure state locking
+3. Configure workspace separation for dev, staging, and prod
 
 ### GitHub Actions / Azure DevOps for IaC:
 Create workflows for:
