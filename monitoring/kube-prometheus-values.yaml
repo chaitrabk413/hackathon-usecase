@@ -1,0 +1,27 @@
+alertmanager:
+  enabled: false
+
+grafana:
+  adminPassword: admin123
+  service:
+    type: ClusterIP
+  persistence:
+    enabled: false
+  sidecar:
+    dashboards:
+      enabled: true
+
+prometheus:
+  prometheusSpec:
+    retention: 12h
+    scrapeInterval: 30s
+    evaluationInterval: 30s
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+prometheusOperator:
+  enabled: true
